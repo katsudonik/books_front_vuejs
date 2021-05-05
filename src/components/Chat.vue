@@ -23,6 +23,7 @@ export default {
     this.messageChannel = this.$cable.subscriptions.create( "MessageChannel",{
       received: (data) => {
         this.messages.push(data)
+        this.msgBox = ''
       },
     })
   },
