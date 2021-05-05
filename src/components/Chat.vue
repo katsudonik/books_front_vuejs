@@ -25,7 +25,8 @@ export default {
         this.messages.push(data)
       },
     })
-    this.fetchMessages()
+    this.sign_in();
+    this.fetchMessages();
   },
   methods: {
     speak() {
@@ -34,7 +35,7 @@ export default {
       });
       this.msgBox = '';
     },
-    fetchMessages() {
+    sign_in() {
       // TODO sign in at login display & save response headers in local storage
       this.axios({
         method: 'post',
@@ -49,32 +50,29 @@ export default {
         timeout: 15000
       }).then((response) => {
         console.log(response);
-        console.log(response.headers);
-        const uid = response.headers['uid'];
-        const client = response.headers['client'];
-        const token = response.headers['access-token'];
-
-
-        this.axios({
-          method: 'get',
-          url: 'http://localhost:3000/chat_messages', // TODO domain
-          headers: {
-            'Content-Type': 'application/json',
-            'uid': uid,
-            'client': client,
-            'access-token': token,
-          },
-          data: {
-          },
-          timeout: 15000
-        }).then((response) => {
-          console.log(response);
-          this.messages = response.data['chat_messages']
-        }).catch((e) => {
-          alert(e);
-        });
-
-
+        localStorage.setItem("client", response.headers["client"]);
+        localStorage.setItem("uid", response.headers["uid"]);
+        localStorage.setItem("access-token", response.headers["access-token"]);
+      }).catch((e) => {
+        alert(e);
+      });
+    },
+    fetchMessages() {
+      this.axios({
+        method: 'get',
+        url: 'http://localhost:3000/chat_messages', // TODO domain
+        headers: {
+          'Content-Type': 'application/json',
+          'uid': localStorage.getItem("uid"),
+          'client': localStorage.getItem("client"),
+          'access-token': localStorage.getItem("access-token"),
+        },
+        data: {
+        },
+        timeout: 15000
+      }).then((response) => {
+        console.log(response);
+        this.messages = response.data['chat_messages']
       }).catch((e) => {
         alert(e);
       });
