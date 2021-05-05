@@ -1,12 +1,12 @@
 <template>
   <div>
-    <input v-model="msgBox" placeholder="message here"  @keydown.enter="speak" />
-    <button v-if="messageChannel" @click="speak">送信</button>
     <ul>
       <li v-for="item in messages" :key="item.message">
         <p>{{ item.message }}</p>
       </li>  
     </ul>
+    <input v-model="msgBox" placeholder="message here"  @keydown.enter="speak" />
+    <button v-if="messageChannel" @click="speak">送信</button>
   </div>
 </template>
 
